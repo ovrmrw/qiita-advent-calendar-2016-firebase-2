@@ -1,7 +1,17 @@
 # qiita-advent-calendar-2016-firebase-2
 Qiita Advent Calendar 2016
 
+[Demo on GitHub Pages](https://ovrmrw.github.io//qiita-advent-calendar-2016-firebase-2/)
 
+## Setup
+```
+$ npm install
+```
+
+## Run
+```
+$ npm start
+```
 
 ---
 
