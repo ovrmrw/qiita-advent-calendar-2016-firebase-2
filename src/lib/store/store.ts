@@ -31,14 +31,24 @@ export class Store {
     @Inject(FirebaseEffector) @Optional()
     private firebaseEffector: FirebaseEffector | null,
   ) {
-    this.dispatcherQueue$ = // DispatcherではなくDispatcherQueueをReducerに代入する。
-      this.dispatcher$
-        .concat() // Actionを発行順に処理する。
-        .share() as Dispatcher<Action>;
-
     this.provider$ = new BehaviorSubject<AppState>(initialState);
+    this.applyDispatcherQueue();
     this.combineReducers();
     this.applyEffectors();
+  }
+
+
+  private applyDispatcherQueue(): void {
+    this.dispatcherQueue$ = // DispatcherではなくDispatcherQueueをReducerに代入する。
+      this.dispatcher$
+        .concatMap(action => { // Actionをdispatch順に処理する。
+          if (action instanceof Promise || action instanceof Observable) {
+            return Observable.from(action);
+          } else {
+            return Observable.of(action);
+          }
+        })
+        .share() as Dispatcher<Action>;
   }
 
 
@@ -74,7 +84,6 @@ export class Store {
 
       /* Firebase Inbound (Firebaseからデータを取得する) */
       this.firebaseEffector.connect$<AppState>('free')
-        // .filter(() => false) // 一時的にInboundを止める。
         .map(cloudState => {
           if (cloudState) {
             return cloudState;
@@ -93,7 +102,6 @@ export class Store {
 
       /* Firebase Outbound (データ更新毎にFirebaseへ保存する) */
       this.firebaseEffectorTrigger$
-        // .filter(() => false) // 一時的にOutboundを止める。
         .combineLatest(this.firebaseRestoreFinished$, (state, afterRestored) => {
           return { state, afterRestored };
         })

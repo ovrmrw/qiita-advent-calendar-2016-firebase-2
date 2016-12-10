@@ -6,7 +6,7 @@ export abstract class Disposer {
   private subs: Subscription[] = [];
 
 
-  constructor(private __cd?: ChangeDetectorRef) { }
+  constructor() { }
 
 
   set disposable(sub: Subscription) {

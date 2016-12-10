@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs/Rx';
 import { AppState } from './store.types';
 
 
@@ -10,4 +11,7 @@ export class RestoreAction {
 }
 
 
-export type Action = UpdateContentAction | RestoreAction;
+export type AllActions = UpdateContentAction | RestoreAction;
+
+
+export type Action = AllActions | Promise<AllActions> | Observable<AllActions>;
