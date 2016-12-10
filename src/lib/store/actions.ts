@@ -2,7 +2,7 @@ import { AppState } from './store.types';
 
 
 export class UpdateContentAction {
-  constructor(public content: string | null) { }
+  constructor(public content: string) { }
 }
 
 export class RestoreAction {
