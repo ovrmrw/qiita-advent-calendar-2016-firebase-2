@@ -4,7 +4,7 @@ import { Action, UpdateContentAction, RestoreAction } from './actions';
 
 export const contentStateReducer: StateReducer<string> =
   (initState: string, dispatcher$: Dispatcher<Action>) =>
-    dispatcher$.scan<typeof initState>((state, action) => {
+    dispatcher$.scan((state, action) => {
       if (action instanceof UpdateContentAction) {
         return action.content;
       } else if (action instanceof RestoreAction) {
@@ -28,7 +28,7 @@ export const restoreStateMapper: NonStateReducer<boolean> =
 
 export const afterRestoredStateReducer: StateReducer<boolean> =
   (initState: boolean, dispatcher$: Dispatcher<Action>) =>
-    dispatcher$.scan<typeof initState>((state, action) => {
+    dispatcher$.scan((state, action) => {
       if (action instanceof RestoreAction) {
         return true;
       } else {
