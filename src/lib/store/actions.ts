@@ -11,7 +11,10 @@ export class RestoreAction {
 }
 
 
-export type AllActions = UpdateContentAction | RestoreAction;
+/**
+ * DON'T import anywhere! Exporting just for bundling.
+ */
+export type _Actions = UpdateContentAction | RestoreAction;
 
 
-export type Action = AllActions | Promise<AllActions> | Observable<AllActions>;
+export type Action = _Actions | Promise<_Actions> | Observable<_Actions>;

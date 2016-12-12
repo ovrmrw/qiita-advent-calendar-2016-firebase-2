@@ -15,7 +15,7 @@ import { Disposer } from '../lib/class';
     <div>content:</div>
     <pre>{{content}}</pre>
   `,
-  styleUrls: ['./app.component.css'],
+  // styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent extends Disposer implements OnInit, OnDestroy {
@@ -38,10 +38,24 @@ export class AppComponent extends Disposer implements OnInit, OnDestroy {
       this.cd.markForCheck();
     });
 
+
+    // content更新毎にActionをdispatchする。
     this.disposable = Observable.fromEvent(this.el.nativeElement, 'keyup')
       .debounceTime(200)
       .subscribe(() => {
+        /*
+          DispatcherはSync/Promise/Observableの3種類でActionを受けられる。
+          非同期ActionはStore内のDispatcherQueueでresolveする。
+        */
+
+        // Synchronous ver.
         this.dispatcher$.next(new UpdateContentAction(this.content));
+
+        // Promise ver.
+        this.dispatcher$.next(Promise.resolve(new UpdateContentAction(this.content)));
+
+        // Observable ver.
+        this.dispatcher$.next(Observable.of(new UpdateContentAction(this.content)));
       });
   }
 

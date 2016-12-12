@@ -32,18 +32,18 @@ export class Store {
     private firebaseEffector: FirebaseEffector | null,
   ) {
     this.provider$ = new BehaviorSubject<AppState>(initialState);
-    this.applyDispatcherQueue();
+    this.createDispatcherQueue();
     this.combineReducers();
     this.applyEffectors();
   }
 
 
-  private applyDispatcherQueue(): void {
+  private createDispatcherQueue(): void {
     this.dispatcherQueue$ = // DispatcherではなくDispatcherQueueをReducerに代入する。
       this.dispatcher$
         .concatMap(action => { // Actionをdispatch順に処理する。
           if (action instanceof Promise || action instanceof Observable) {
-            return Observable.from(action);
+            return Observable.from(action); // 非同期Actionはここでresolveする。
           } else {
             return Observable.of(action);
           }
